@@ -76,7 +76,7 @@ done
 c '1;36' "1. Making ${#TO_PRIVATE[@]} learning repos private (reversible any time)"
 for n in "${TO_PRIVATE[@]}"; do
   echo "   · $n"
-  run gh repo edit "$OWNER/$n" --visibility private --accept-visibility-change-consequences
+  run gh repo edit "$OWNER/$n" --visibility private
 done
 echo
 
@@ -141,22 +141,13 @@ for n in "${KEPT[@]}"; do
 done
 echo
 
-# ---- 5. pin the survivors ---------------------------------------------------
-c '1;36' "5. Pinning the profile repositories"
-PIN=(madi-madi.github.io laravel_nuxt_api ecommerce-shopping laravel-with-docker fcmapp quran-app)
-IDS=""
-for n in "${PIN[@]}"; do
-  id=$(gh api "repos/$OWNER/$n" --jq .node_id 2>/dev/null) || continue
-  IDS="$IDS\"$id\","
-done
-IDS="[${IDS%,}]"
-echo "   ${PIN[*]}"
-if (( APPLY )); then
-  gh api graphql -f query="mutation{ replaceRepositoryPins(input:{repositoryIds:$IDS}){ clientMutationId } }" \
-    >/dev/null && c '2;32' "   pinned"
-else
-  c '2;37' "      would pin via GraphQL"
-fi
+# ---- 5. pinning is UI-only ---------------------------------------------------
+# GitHub does not expose repository pinning in its public API — the
+# replaceRepositoryPins mutation is internal. Do this one by hand:
+c '1;36' "5. Pinning (manual — GitHub has no API for it)"
+c '2;37' "   github.com/$OWNER -> Customize your pins -> tick:"
+c '2;37' "   madi-madi.github.io · laravel_nuxt_api · ecommerce-shopping"
+c '2;37' "   laravel-with-docker · fcmapp · quran-app"
 echo
 
 c '1;32' "Done."
