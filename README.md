@@ -2,8 +2,17 @@
 
 Personal site for Ibrahim Salama Madi — full-stack developer (Laravel · Vue · Elasticsearch).
 
-Single static page. No build step, no dependencies, no framework.
-Bilingual English / Arabic with a real RTL layout, light + dark themes, JSON-LD `Person` markup for search engines.
+Two static pages, no build step, no dependencies, no framework.
+
+- `index.html` — an interactive Ubuntu terminal. Type `help`, `skills`,
+  `search <arabic>`, `projects`. Clickable command buttons sit underneath so a
+  non-technical reader never faces a blank prompt.
+- `about.html` — the same story as a readable page. Bilingual English / Arabic
+  with a real RTL layout, light + dark themes, a live Arabic search demo and an
+  SVG of the ingest pipeline.
+
+Brand logos in `skills` are official Simple Icons paths (CC0), inlined — the
+page makes no external request except the Google Fonts stylesheet.
 
 ## Publishing
 

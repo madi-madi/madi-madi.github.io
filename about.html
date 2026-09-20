@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ibrahim Madi</title>
+<meta name="description" content="Full-stack developer. Laravel, Vue and search infrastructure behind ArabsStock, an Arabic stock media marketplace serving over a million assets.">
+<link rel="canonical" href="https://madi-madi.github.io/">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Ibrahim Madi — Full-stack developer">
+<meta property="og:description" content="Laravel, Vue and search infrastructure behind an Arabic media marketplace serving 1M+ assets.">
+<meta property="og:url" content="https://madi-madi.github.io/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2342B883'/%3E%3Cpath d='M8 23V9h3l5 9 5-9h3v14h-3v-8l-3.6 6.4h-2.8L11 15v8z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --ground:#F3F6F4; --surface:#FFFFFF; --ink:#35495E; --muted:#61798C;
+  --rule:#DBE3DF; --rule-strong:#BDCAC4; --accent:#1E8A62; --accent-ink:#17694A;
+  --brand:#42B883; --brand-hover:#35A473; --on-brand:#16222B; --brand-wash:#E3F5EC;
+  --sans:"IBM Plex Sans","IBM Plex Sans Arabic",system-ui,-apple-system,Segoe UI,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#1B2831; --surface:#22323D; --ink:#E7EFEB; --muted:#93A9B5;
+    --rule:#2E4250; --rule-strong:#435B6B; --accent:#42B883; --accent-ink:#6FD3A4;
+    --brand:#42B883; --brand-hover:#6FD3A4; --on-brand:#12202A; --brand-wash:#1D3B33;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#1B2831; --surface:#22323D; --ink:#E7EFEB; --muted:#93A9B5;
+  --rule:#2E4250; --rule-strong:#435B6B; --accent:#42B883; --accent-ink:#6FD3A4;
+  --brand:#42B883; --brand-hover:#6FD3A4; --on-brand:#12202A; --brand-wash:#1D3B33;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.6;
+  font-feature-settings:"ss01";
+  -webkit-font-smoothing:antialiased;
+}
+html[dir="rtl"] body{font-family:"IBM Plex Sans Arabic","IBM Plex Sans",system-ui,sans-serif}
+img{max-width:100%}
+a{color:var(--accent); text-decoration:none}
+a:hover{text-decoration:underline; text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+h1,h2,h3{text-wrap:balance; margin:0; font-weight:600; letter-spacing:-0.02em}
+
+.shell{
+  max-width:1120px; margin:0 auto;
+  padding-inline:24px; padding-block:clamp(40px,7vw,88px);
+  display:grid; grid-template-columns:250px 1fr; gap:clamp(40px,6vw,80px);
+  align-items:start;
+}
+@media (max-width:920px){ .shell{grid-template-columns:1fr; gap:44px} }
+
+/* ---------- rail ---------- */
+.rail{position:sticky; top:calc(env(safe-area-inset-top,0px) + 44px); display:flex; flex-direction:column; gap:26px}
+@media (max-width:920px){ .rail{position:static; gap:22px} }
+.name{font-size:26px; line-height:1.15; letter-spacing:-0.03em}
+.role{margin:6px 0 0; color:var(--muted); font-size:14.5px; line-height:1.5}
+.loc{font-family:var(--mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin:10px 0 0; display:flex; align-items:center; gap:7px}
+.dot{width:6px; height:6px; border-radius:50%; background:var(--brand); flex:none}
+nav ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
+@media (max-width:920px){ nav ul{flex-direction:row; flex-wrap:wrap; gap:4px 18px} }
+nav a{color:var(--muted); font-family:var(--mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; padding-block:3px; display:inline-block}
+nav a:hover{color:var(--ink); text-decoration:none}
+.links{display:flex; flex-direction:column; gap:3px; font-size:14.5px}
+@media (max-width:920px){ .links{flex-direction:row; flex-wrap:wrap; gap:6px 20px} }
+.tools{display:flex; gap:8px; padding-top:4px}
+.tools button{
+  font-family:var(--mono); font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+  background:transparent; color:var(--muted); border:1px solid var(--rule-strong);
+  padding:5px 10px; border-radius:2px; cursor:pointer; line-height:1;
+}
+.tools button:hover{color:var(--ink); border-color:var(--ink)}
+
+/* ---------- main ---------- */
+main{display:flex; flex-direction:column; gap:clamp(48px,6vw,72px); min-width:0}
+.lede{font-size:clamp(24px,3.4vw,34px); line-height:1.28; letter-spacing:-0.025em; font-weight:600; max-width:19ch}
+.lede em{font-style:normal; color:var(--accent)}
+.sub{margin:20px 0 0; color:var(--muted); max-width:58ch; font-size:16.5px}
+
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin:0 0 18px; padding-bottom:8px; border-bottom:1px solid var(--rule-strong)}
+
+/* figures */
+.figures{display:grid; grid-template-columns:repeat(3,1fr); margin-top:36px; border-top:1px solid var(--rule-strong)}
+@media (max-width:620px){ .figures{grid-template-columns:1fr} }
+.fig{padding:16px 18px 16px 0; border-bottom:1px solid var(--rule)}
+html[dir="rtl"] .fig{padding:16px 0 16px 18px}
+.fig+.fig{border-inline-start:1px solid var(--rule); padding-inline-start:18px}
+@media (max-width:620px){ .fig+.fig{border-inline-start:0; padding-inline-start:0} }
+.fig b{display:block; font-size:27px; font-weight:600; letter-spacing:-0.03em; font-variant-numeric:tabular-nums}
+.fig span{display:block; color:var(--muted); font-size:13.5px; line-height:1.45; margin-top:3px}
+
+/* spec list */
+.spec{display:grid; grid-template-columns:180px 1fr; margin:0}
+@media (max-width:620px){ .spec{grid-template-columns:1fr} }
+.spec dt{
+  font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted); padding-block:13px; border-top:1px solid var(--rule); padding-inline-end:16px;
+}
+.spec dd{margin:0; padding-block:13px; border-top:1px solid var(--rule); font-size:15.5px}
+@media (max-width:620px){ .spec dd{border-top:0; padding-top:0; padding-bottom:14px} .spec dt{padding-bottom:2px} }
+
+/* work */
+.work{display:flex; flex-direction:column; gap:38px}
+.item{display:grid; grid-template-columns:180px 1fr; border-top:1px solid var(--rule); padding-top:18px}
+@media (max-width:620px){ .item{grid-template-columns:1fr; gap:6px} }
+.item .when{font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding-top:5px}
+.item h3{font-size:19px; letter-spacing:-0.02em}
+.item .kicker{color:var(--muted); font-size:14px; margin:3px 0 12px}
+.item ul{margin:0; padding-inline-start:18px; display:flex; flex-direction:column; gap:7px; color:var(--ink)}
+.item li{padding-inline-start:2px}
+.item li::marker{color:var(--rule-strong)}
+.tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:14px}
+.tags span{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--muted); border:1px solid var(--rule); padding:3px 7px; border-radius:2px}
+.note{margin:14px 0 0; font-size:13.5px; color:var(--muted); border-inline-start:2px solid var(--brand); padding-inline-start:12px; line-height:1.5}
+
+/* contact */
+.contact p{max-width:52ch; color:var(--muted); margin:0 0 20px}
+.cta{display:inline-flex; align-items:center; gap:9px; background:var(--brand); color:var(--on-brand); font-weight:600; font-size:15.5px; padding:11px 20px; border-radius:3px}
+.cta:hover{text-decoration:none; background:var(--brand-hover); color:var(--on-brand)}
+footer{margin-top:8px; padding-top:18px; border-top:1px solid var(--rule); font-family:var(--mono); font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+
+@media (prefers-reduced-motion:no-preference){
+  main>section{animation:rise .5s cubic-bezier(.2,.7,.3,1) backwards}
+  main>section:nth-child(2){animation-delay:.05s}
+  main>section:nth-child(3){animation-delay:.1s}
+  @keyframes rise{from{opacity:0; transform:translateY(10px)}}
+}
+/* ---------- search demo ---------- */
+.demo{margin-top:26px; border-top:1px solid var(--rule-strong); padding-top:20px}
+.demo-label{display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+#q{
+  width:100%; font-family:var(--sans); font-size:20px; color:var(--ink);
+  background:var(--surface); border:1px solid var(--rule-strong); border-radius:3px;
+  padding:11px 14px; -webkit-appearance:none;
+}
+#q:focus{outline:none; border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-wash)}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
+.chips button{
+  font-family:var(--sans); font-size:14px; background:var(--brand-wash); color:var(--ink);
+  border:1px solid transparent; border-radius:3px; padding:4px 11px; cursor:pointer; line-height:1.5;
+}
+.chips button:hover{border-color:var(--brand)}
+
+.pipe{list-style:none; margin:22px 0 0; padding:0; display:grid; gap:0; counter-reset:step}
+.pipe li{
+  display:grid; grid-template-columns:22px 1fr auto; gap:0 12px; align-items:baseline;
+  padding-block:9px; border-top:1px solid var(--rule); counter-increment:step;
+}
+@media (max-width:620px){ .pipe li{grid-template-columns:22px 1fr; } .pipe .out{grid-column:2; padding-top:2px} }
+.pipe li::before{
+  content:counter(step); font-family:var(--mono); font-size:10px; color:var(--muted);
+  border:1px solid var(--rule-strong); border-radius:50%; width:18px; height:18px;
+  display:grid; place-items:center; line-height:1; align-self:center;
+}
+.pipe .what{font-size:14px; color:var(--muted)}
+.pipe .out{font-size:17px; direction:rtl; text-align:start; color:var(--ink)}
+.pipe .out del{text-decoration:none; opacity:.3}
+
+.cols{display:grid; grid-template-columns:1fr 1fr; gap:0 28px; margin-top:26px}
+@media (max-width:620px){ .cols{grid-template-columns:1fr; gap:26px} }
+.col{border-top:2px solid var(--rule-strong); padding-top:12px; min-width:0}
+.col.ok{border-top-color:var(--brand)}
+.col h4{margin:0; font-family:var(--mono); font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted); font-weight:500}
+.col .count{margin:4px 0 12px; font-size:26px; font-weight:600; letter-spacing:-0.03em; font-variant-numeric:tabular-nums}
+.col.ok .count{color:var(--accent)}
+.col ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:11px}
+.col li{font-size:15.5px; direction:rtl; text-align:start}
+.col li .idx{display:block; font-family:var(--mono); font-size:11.5px; color:var(--muted); direction:rtl; margin-top:2px}
+.col mark{background:var(--brand-wash); color:var(--ink); padding:0 2px; border-radius:2px}
+.col .empty{font-size:14px; color:var(--muted); direction:ltr; font-family:var(--mono)}
+
+/* ---------- diagram ---------- */
+.diagram{margin:26px 0 0}
+.diagram svg{max-width:100%; height:auto; color:var(--ink); display:block}
+.diagram .box{fill:var(--surface); stroke:currentColor; stroke-width:1; opacity:.9}
+.diagram .queue{fill:var(--brand-wash); stroke:var(--brand); stroke-width:1.5; opacity:1}
+.diagram .t{fill:currentColor; font-family:var(--sans); font-size:12px; text-anchor:middle}
+.diagram .lbl{fill:var(--muted); font-family:var(--mono); font-size:10px; letter-spacing:.05em; text-anchor:middle}
+.diagram .flow{stroke:currentColor; fill:none; stroke-width:1.2; opacity:.55}
+.diagram figcaption{margin-top:14px; font-size:14px; color:var(--muted); max-width:60ch; line-height:1.55}
+
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="rail">
+    <div>
+      <h1 class="name" data-i18n="name">Ibrahim Madi</h1>
+      <p class="role" data-i18n="role">Full-stack developer. Laravel &amp; Vue on the surface, search and queues underneath.</p>
+      <p class="loc"><span class="dot"></span><span data-i18n="loc">Gaza, Palestine — open to remote</span></p>
+    </div>
+
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="#search" data-i18n="nav0">Arabic search, live</a></li>
+        <li><a href="#pipeline" data-i18n="nav5">The ingest pipeline</a></li>
+        <li><a href="#work" data-i18n="nav1">Selected work</a></li>
+        <li><a href="#experience" data-i18n="nav2">Experience</a></li>
+        <li><a href="#stack" data-i18n="nav3">Stack</a></li>
+        <li><a href="#contact" data-i18n="nav4">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="links">
+      <a href="mailto:ibrahim.s.m.2010@gmail.com">Email</a>
+      <a href="https://github.com/madi-madi" rel="me noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/madi-madi/" rel="me noopener">LinkedIn</a>
+      <a href="Ibrahim-Madi-CV.pdf" data-i18n="cv">CV (PDF)</a>
+      <a href="./" data-i18n="term">Terminal</a>
+    </div>
+
+    <div class="tools">
+      <button id="lang" type="button" aria-label="Switch language">العربية</button>
+      <button id="theme" type="button" data-i18n="theme" aria-label="Switch theme">Dark</button>
+    </div>
+  </aside>
+
+  <main>
+
+    <section id="intro">
+      <p class="lede" data-i18n-html="lede">I build the back end of a marketplace that serves <em>over a million</em> media assets.</p>
+      <p class="sub" data-i18n="sub">Seven years of Laravel in production, the last five on ArabsStock — the Arabic stock media marketplace. I own the parts people never see: full-text search in two languages, the pipeline that turns a contributor upload into every delivered format, and the queues that keep both fast.</p>
+
+      <div class="figures">
+        <div class="fig"><b dir="ltr">1M+</b><span data-i18n="f1">Assets indexed and searchable in Arabic and English</span></div>
+        <div class="fig"><b dir="ltr">2017</b><span data-i18n="f2">Shipping production web applications since</span></div>
+        <div class="fig"><b dir="ltr">4</b><span data-i18n="f3">Media types through one ingest pipeline: photo, vector, video, audio</span></div>
+      </div>
+    </section>
+
+
+    <section id="search">
+      <p class="eyebrow" data-i18n="nav0">Arabic search, live</p>
+      <p class="sub" style="margin-top:0" data-i18n-html="dm0">Arabic carries optional vowel marks, and several letters have more than one accepted spelling. A buyer types <b dir="rtl">قهوه</b>; the asset is filed as <b dir="rtl">قهوة</b>. <code>LIKE</code> returns nothing. Below is the normalisation that closes that gap — running in your browser, on the rules an index has to apply to the query and the document alike.</p>
+
+      <div class="demo">
+        <label class="demo-label" for="q" data-i18n="dm1">Query — 12 sample asset titles</label>
+        <input id="q" type="search" dir="rtl" value="قَهْوَة" autocomplete="off" spellcheck="false">
+        <div class="chips" id="chips"></div>
+
+        <ol class="pipe" id="pipe"></ol>
+
+        <div class="cols">
+          <div class="col">
+            <h4 data-i18n="dm2">Substring match</h4>
+            <p class="count" id="c-naive">0</p>
+            <ul id="r-naive"></ul>
+          </div>
+          <div class="col ok">
+            <h4 data-i18n="dm3">Normalised index</h4>
+            <p class="count" id="c-norm">0</p>
+            <ul id="r-norm"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pipeline">
+      <p class="eyebrow" data-i18n="nav5">The ingest pipeline</p>
+      <p class="sub" style="margin-top:0" data-i18n="dg0">A contributor uploads one file. Before it can be sold it has to become a thumbnail, a watermarked preview, a delivery master and a row in two different stores — and none of that may happen inside the HTTP request.</p>
+      <figure class="diagram">
+        <svg viewBox="0 0 884 292" role="img" aria-label="One contributor upload is stored, published as a job to a RabbitMQ topic exchange, routed by media type to an image, vector or video worker, and written back as variants plus rows in MySQL and Elasticsearch.">
+          <defs>
+            <marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L8,4 L0,8 z" fill="currentColor" opacity="0.55"></path>
+            </marker>
+          </defs>
+
+          <rect class="box" x="8" y="124" width="116" height="46" rx="3"></rect>
+          <text class="t" x="66" y="143">Contributor</text><text class="t" x="66" y="159">upload</text>
+
+          <rect class="box" x="172" y="124" width="116" height="46" rx="3"></rect>
+          <text class="t" x="230" y="143">Object</text><text class="t" x="230" y="159">storage</text>
+
+          <rect class="queue" x="336" y="124" width="116" height="46" rx="3"></rect>
+          <text class="t" x="394" y="143">RabbitMQ</text><text class="t" x="394" y="159">topic exchange</text>
+
+          <rect class="box" x="512" y="36" width="136" height="46" rx="3"></rect>
+          <text class="t" x="580" y="55">Pillow ·</text><text class="t" x="580" y="71">ImageMagick</text>
+
+          <rect class="box" x="512" y="124" width="136" height="46" rx="3"></rect>
+          <text class="t" x="580" y="143">vector</text><text class="t" x="580" y="159">→ raster</text>
+
+          <rect class="box" x="512" y="212" width="136" height="46" rx="3"></rect>
+          <text class="t" x="580" y="231">FFmpeg</text><text class="t" x="580" y="247">transcode</text>
+
+          <rect class="box" x="708" y="111" width="168" height="72" rx="3"></rect>
+          <text class="t" x="792" y="132">variants → storage</text>
+          <text class="t" x="792" y="152">metadata → MySQL</text>
+          <text class="t" x="792" y="172">titles → Elasticsearch</text>
+
+          <path class="flow" d="M124,147 L166,147" marker-end="url(#ar)"></path>
+          <path class="flow" d="M288,147 L330,147" marker-end="url(#ar)"></path>
+          <path class="flow" d="M452,147 C480,147 484,59 506,59" marker-end="url(#ar)"></path>
+          <path class="flow" d="M452,147 L506,147" marker-end="url(#ar)"></path>
+          <path class="flow" d="M452,147 C480,147 484,235 506,235" marker-end="url(#ar)"></path>
+          <path class="flow" d="M648,59 C678,59 680,147 702,147" marker-end="url(#ar)"></path>
+          <path class="flow" d="M648,147 L702,147" marker-end="url(#ar)"></path>
+          <path class="flow" d="M648,235 C678,235 680,147 702,147" marker-end="url(#ar)"></path>
+
+          <text class="lbl" x="145" y="112">stores original</text>
+          <text class="lbl" x="309" y="112">publishes job</text>
+          <text class="lbl" x="479" y="112">routes by type</text>
+          <text class="lbl" x="675" y="112">writes back</text>
+        </svg>
+        <figcaption data-i18n="dg1">The exchange is the whole point: the upload request returns as soon as the original is stored, and a 400&nbsp;MB video and a 2&nbsp;MB photo take the same path without one waiting on the other. Adding a format means adding a consumer, not touching the upload.</figcaption>
+      </figure>
+    </section>
+
+    <section id="work">
+      <p class="eyebrow" data-i18n="nav1">Selected work</p>
+      <div class="work">
+
+        <article class="item">
+          <div class="when">2021 &rarr; <span data-i18n="now">now</span></div>
+          <div>
+            <h3>ArabsStock</h3>
+            <p class="kicker" data-i18n="w1k">Arabic stock media marketplace · core developer, Kenan Technology</p>
+            <ul>
+              <li data-i18n="w1a"><strong>Search.</strong> Elasticsearch full-text and faceted search across 1M+ assets, tuned for Arabic and English queries against the same index.</li>
+              <li data-i18n="w1b"><strong>Ingest.</strong> Contributor upload portal for photos, vectors, video and audio, with metadata entry and a review workflow before anything goes live.</li>
+              <li data-i18n="w1c"><strong>Processing.</strong> Python pipelines for resizing, watermarking, vector conversion and FFmpeg transcoding, dispatched as RabbitMQ jobs so uploads never block a request.</li>
+              <li data-i18n="w1d"><strong>Commerce.</strong> Purchase and subscription flows wired to HyperPay, Stripe and PayPal, plus the admin side for orders, payouts and financials.</li>
+              <li data-i18n="w1e"><strong>Delivery.</strong> Docker and Kubernetes deployments on a CI/CD pipeline; Redis for caching and sessions; FCM for push.</li>
+            </ul>
+            <div class="tags"><span>Laravel</span><span>Vue / Nuxt</span><span>Elasticsearch</span><span>RabbitMQ</span><span>Redis</span><span>Python</span><span>FFmpeg</span><span>Kubernetes</span></div>
+            <p class="note" data-i18n="w1n">The repository is private company code. I am happy to walk through the search schema, the queue topology or the media pipeline on a call.</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="when">2020</div>
+          <div>
+            <h3>Rasd</h3>
+            <p class="kicker" data-i18n="w2k">Social listening and brand analytics</p>
+            <ul>
+              <li data-i18n="w2a">Pulled Facebook, Twitter and Awario APIs into one real-time monitoring dashboard, normalising three different response shapes into a single mention feed.</li>
+            </ul>
+            <div class="tags"><span>Laravel</span><span>Vue</span><span>REST integrations</span></div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="when">2021 &rarr; <span data-i18n="now">now</span></div>
+          <div>
+            <h3>ESG</h3>
+            <p class="kicker" data-i18n="w3k">Enterprise governance platform · Kenan Technology</p>
+            <ul>
+              <li data-i18n="w3a">Laravel backend modules for ESG reporting and compliance workflows — recurring disclosure cycles, evidence attachments and approval chains.</li>
+            </ul>
+            <div class="tags"><span>Laravel</span><span>MySQL</span></div>
+          </div>
+        </article>
+
+        <article class="item">
+          <div class="when">2019 &rarr; 2020</div>
+          <div>
+            <h3>GCC &amp; HADEEDAPP</h3>
+            <p class="kicker" data-i18n="w4k">Programme dashboards and field tracking</p>
+            <ul>
+              <li data-i18n="w4a">A delivery dashboard with Gantt scheduling, calendars and Vuex-managed state for programme teams.</li>
+              <li data-i18n="w4b">Geo-location and Google Maps integration for tracking field staff against assigned sites.</li>
+            </ul>
+            <div class="tags"><span>Laravel</span><span>Vue</span><span>Vuex</span><span>Google Maps</span></div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section id="experience">
+      <p class="eyebrow" data-i18n="nav2">Experience</p>
+      <dl class="spec">
+        <dt>2021 &rarr; <span data-i18n="now">now</span></dt>
+        <dd data-i18n="e1"><strong>Kenan Technology</strong> — Full-stack developer. ArabsStock and ESG.</dd>
+        <dt>2022</dt>
+        <dd data-i18n="e2"><strong>Accessline</strong> — Contract. Nutrition and wellness platform, Laravel &amp; Vue.</dd>
+        <dt>2020</dt>
+        <dd data-i18n="e3"><strong>Apex for IT Solutions &amp; Rasd</strong> — Laravel, FCM, HyperPay, REST APIs and social analytics.</dd>
+        <dt>2019 &rarr; 2020</dt>
+        <dd data-i18n="e4"><strong>Effects for Consultations &amp; Development</strong> — Dashboards, mapping and WordPress/PHP delivery.</dd>
+        <dt>2017</dt>
+        <dd data-i18n="e5"><strong>Space</strong> — First production work: a cultural web platform in PHP and MySQL.</dd>
+        <dt data-i18n="edu">Education</dt>
+        <dd data-i18n="e6"><strong>BSc Information Technology &amp; Communications</strong> — Al-Quds Open University, 2013–2016.</dd>
+      </dl>
+    </section>
+
+    <section id="stack">
+      <p class="eyebrow" data-i18n="nav3">Stack</p>
+      <dl class="spec">
+        <dt data-i18n="s1">Backend</dt>
+        <dd>PHP · Laravel · Python · REST APIs · <span data-i18n="s1v">modular architecture</span></dd>
+        <dt data-i18n="s2">Frontend</dt>
+        <dd>Vue.js · Nuxt.js · Inertia.js · JavaScript</dd>
+        <dt data-i18n="s3">Data &amp; search</dt>
+        <dd>MySQL · Elasticsearch · Redis</dd>
+        <dt data-i18n="s4">Async &amp; media</dt>
+        <dd>RabbitMQ · FFmpeg · Pillow · ImageMagick · FCM</dd>
+        <dt data-i18n="s5">Infrastructure</dt>
+        <dd>Docker · Kubernetes · Nginx · Git · CI/CD</dd>
+        <dt data-i18n="s6">Payments</dt>
+        <dd>HyperPay · Stripe · PayPal</dd>
+        <dt data-i18n="s7">Languages</dt>
+        <dd data-i18n="s7v">Arabic (native) · English (professional working)</dd>
+      </dl>
+    </section>
+
+    <section id="contact" class="contact">
+      <p class="eyebrow" data-i18n="nav4">Contact</p>
+      <p data-i18n="cta1">I am open to remote backend or full-stack roles, and to contract work. If you are hiring, the fastest way to judge me is to ask about something specific — how the search index is built, or what happens between an upload and a delivered file.</p>
+      <a class="cta" href="mailto:ibrahim.s.m.2010@gmail.com?subject=Role%20enquiry" data-i18n="cta2">Email me &rarr;</a>
+      <footer>
+        <span data-i18n="foot">Ibrahim Salama Madi · Gaza, Palestine</span>
+      </footer>
+    </section>
+
+  </main>
+</div>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Ibrahim Salama Madi","alternateName":"إبراهيم سلامة ماضي","jobTitle":"Full-Stack Web Developer","email":"mailto:ibrahim.s.m.2010@gmail.com","url":"https://madi-madi.github.io/","address":{"@type":"PostalAddress","addressLocality":"Gaza","addressCountry":"PS"},"sameAs":["https://github.com/madi-madi","https://www.linkedin.com/in/madi-madi/"],"knowsLanguage":["ar","en"],"knowsAbout":["Laravel","PHP","Vue.js","Nuxt.js","Elasticsearch","Redis","RabbitMQ","Docker","Kubernetes","Python"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Al-Quds Open University"}}
+</script>
+
+<script>
+const AR = {
+  nav0:"\u0627\u0644\u0628\u062d\u062b \u0627\u0644\u0639\u0631\u0628\u064a\u060c \u062d\u064a\u0651\u0627\u064b", nav5:"\u0645\u0633\u0627\u0631 \u0627\u0644\u0645\u0639\u0627\u0644\u062c\u0629",
+  dm0:"\u0627\u0644\u0639\u0631\u0628\u064a\u0629 \u062a\u064f\u0643\u062a\u0628 \u0628\u062a\u0634\u0643\u064a\u0644 \u0627\u062e\u062a\u064a\u0627\u0631\u064a\u060c \u0648\u0639\u062f\u0651\u0629 \u062d\u0631\u0648\u0641 \u0641\u064a\u0647\u0627 \u0623\u0643\u062b\u0631 \u0645\u0646 \u0625\u0645\u0644\u0627\u0621 \u0645\u0642\u0628\u0648\u0644. \u0627\u0644\u0645\u0634\u062a\u0631\u064a \u064a\u0643\u062a\u0628 <b dir=\"rtl\">\u0642\u0647\u0648\u0647</b>\u060c \u0648\u0627\u0644\u0623\u0635\u0644 \u0645\u0641\u0647\u0631\u0633 \u0628\u0640 <b dir=\"rtl\">\u0642\u0647\u0648\u0629</b>. \u0627\u0633\u062a\u0639\u0644\u0627\u0645 <code>LIKE</code> \u064a\u0639\u0648\u062f \u0641\u0627\u0631\u063a\u0627\u064b. \u0647\u0630\u0627 \u0627\u0644\u062a\u0637\u0628\u064a\u0639 \u0647\u0648 \u0645\u0627 \u064a\u063a\u0644\u0642 \u0627\u0644\u0641\u062c\u0648\u0629 \u2014 \u064a\u0639\u0645\u0644 \u0627\u0644\u0622\u0646 \u0641\u064a \u0645\u062a\u0635\u0641\u062d\u0643\u060c \u0628\u0627\u0644\u0642\u0648\u0627\u0639\u062f \u0646\u0641\u0633\u0647\u0627 \u0627\u0644\u062a\u064a \u064a\u0637\u0628\u0651\u0642\u0647\u0627 \u0627\u0644\u0641\u0647\u0631\u0633 \u0639\u0644\u0649 \u0627\u0644\u0627\u0633\u062a\u0639\u0644\u0627\u0645 \u0648\u0627\u0644\u0645\u0633\u062a\u0646\u062f \u0645\u0639\u0627\u064b.",
+  dm1:"\u0627\u0633\u062a\u0639\u0644\u0627\u0645 \u2014 \u0662\u0661 \u0639\u0646\u0648\u0627\u0646 \u0623\u0635\u0644 \u062a\u062c\u0631\u064a\u0628\u064a",
+  dm2:"\u0645\u0637\u0627\u0628\u0642\u0629 \u0646\u0635\u064a\u0629 \u0645\u0628\u0627\u0634\u0631\u0629", dm3:"\u0641\u0647\u0631\u0633 \u0645\u064f\u0637\u0628\u0651\u0639",
+  dg0:"\u0627\u0644\u0645\u0633\u0627\u0647\u0645 \u064a\u0631\u0641\u0639 \u0645\u0644\u0641\u0627\u064b \u0648\u0627\u062d\u062f\u0627\u064b. \u0642\u0628\u0644 \u0623\u0646 \u064a\u064f\u0628\u0627\u0639\u060c \u0639\u0644\u064a\u0647 \u0623\u0646 \u064a\u0635\u064a\u0631 \u0635\u0648\u0631\u0629 \u0645\u0635\u063a\u0651\u0631\u0629\u060c \u0648\u0645\u0639\u0627\u064a\u0646\u0629 \u0628\u0639\u0644\u0627\u0645\u0629 \u0645\u0627\u0626\u064a\u0629\u060c \u0648\u0646\u0633\u062e\u0629 \u062a\u0633\u0644\u064a\u0645\u060c \u0648\u0633\u0637\u0631\u0627\u064b \u0641\u064a \u0645\u062e\u0632\u0646\u064a\u0646 \u0645\u062e\u062a\u0644\u0641\u064a\u0646 \u2014 \u0648\u0644\u0627 \u064a\u062c\u0648\u0632 \u0623\u0646 \u064a\u062d\u062f\u062b \u0634\u064a\u0621 \u0645\u0646 \u0630\u0644\u0643 \u062f\u0627\u062e\u0644 \u0637\u0644\u0628 HTTP.",
+  dg1:"\u0627\u0644\u0640exchange \u0647\u0648 \u0628\u064a\u062a \u0627\u0644\u0642\u0635\u064a\u062f: \u0637\u0644\u0628 \u0627\u0644\u0631\u0641\u0639 \u064a\u0639\u0648\u062f \u0641\u0648\u0631 \u062a\u062e\u0632\u064a\u0646 \u0627\u0644\u0623\u0635\u0644\u060c \u0648\u0641\u064a\u062f\u064a\u0648 \u0628\u062d\u062c\u0645 400 \u0645\u064a\u063a\u0627\u0628\u0627\u064a\u062a \u0648\u0635\u0648\u0631\u0629 \u0628\u062d\u062c\u0645 2 \u0645\u064a\u063a\u0627\u0628\u0627\u064a\u062a \u064a\u0633\u0644\u0643\u0627\u0646 \u0627\u0644\u0645\u0633\u0627\u0631 \u0646\u0641\u0633\u0647 \u062f\u0648\u0646 \u0623\u0646 \u064a\u0646\u062a\u0638\u0631 \u0623\u062d\u062f\u0647\u0645\u0627 \u0627\u0644\u0622\u062e\u0631. \u0625\u0636\u0627\u0641\u0629 \u0635\u064a\u063a\u0629 \u062c\u062f\u064a\u062f\u0629 \u062a\u0639\u0646\u064a \u0625\u0636\u0627\u0641\u0629 consumer\u060c \u0644\u0627 \u0627\u0644\u0645\u0633\u0627\u0633 \u0628\u0627\u0644\u0631\u0641\u0639.",
+  name:"إبراهيم ماضي",
+  role:"مطوّر ويب متكامل. Laravel وVue في الواجهة، والبحث والطوابير في العمق.",
+  loc:"غزة، فلسطين — متاح للعمل عن بُعد",
+  nav1:"أعمال مختارة", nav2:"الخبرة", nav3:"التقنيات", nav4:"تواصل",
+  cv:"السيرة الذاتية (PDF)", term:"الطرفية", theme:"داكن", now:"الآن", edu:"التعليم",
+  lede:"أبني الواجهة الخلفية لسوق يخدم <em>أكثر من مليون</em> أصل بصري.",
+  sub:"سبع سنوات من Laravel في بيئة الإنتاج، خمس منها على ArabsStock — سوق الوسائط العربية. أتولّى ما لا يراه المستخدم: البحث النصّي بلغتين، والمسار الذي يحوّل رفعة المساهم إلى كل صيغة تُسلَّم، والطوابير التي تُبقي الاثنين سريعين.",
+  f1:"أصل مفهرس وقابل للبحث بالعربية والإنجليزية",
+  f2:"أطوّر تطبيقات ويب في بيئة الإنتاج منذ",
+  f3:"أنواع وسائط عبر مسار رفع واحد: صور، فيكتور، فيديو، صوت",
+  w1k:"سوق الوسائط العربية · مطوّر أساسي، شركة كنان للتكنولوجيا",
+  w1a:"<strong>البحث.</strong> بحث نصّي كامل وتصنيفي عبر Elasticsearch على أكثر من مليون أصل، مضبوط للاستعلامات العربية والإنجليزية على الفهرس نفسه.",
+  w1b:"<strong>الرفع.</strong> بوابة المساهمين لرفع الصور والفيكتور والفيديو والصوت، مع إدخال البيانات الوصفية ومسار مراجعة قبل النشر.",
+  w1c:"<strong>المعالجة.</strong> مسارات Python لتغيير الأحجام والعلامة المائية وتحويل الفيكتور والترميز عبر FFmpeg، تُرسَل كمهام RabbitMQ حتى لا تعطّل الرفعات أي طلب.",
+  w1d:"<strong>المدفوعات.</strong> مسارات الشراء والاشتراك موصولة بـ HyperPay وStripe وPayPal، إضافة إلى لوحة الإدارة للطلبات والمستحقات والتقارير المالية.",
+  w1e:"<strong>النشر.</strong> نشر عبر Docker وKubernetes ضمن خط CI/CD، وRedis للتخزين المؤقت والجلسات، وFCM للإشعارات.",
+  w1n:"المستودع كود خاص بالشركة. يسعدني أن أشرح بنية فهرس البحث أو تصميم الطوابير أو مسار معالجة الوسائط في مقابلة.",
+  w2k:"منصّة رصد وتحليل وسائل التواصل",
+  w2a:"دمج واجهات Facebook وTwitter وAwario في لوحة رصد لحظية واحدة، مع توحيد ثلاثة أشكال استجابة مختلفة في تدفّق إشارات واحد.",
+  w3k:"منصّة حوكمة للمؤسسات · شركة كنان للتكنولوجيا",
+  w3a:"وحدات خلفية بـ Laravel لتقارير ESG ومسارات الامتثال — دورات إفصاح دورية، ومرفقات إثبات، وسلاسل اعتماد.",
+  w4k:"لوحات متابعة البرامج وتتبّع الميدان",
+  w4a:"لوحة متابعة بمخططات Gantt وتقاويم وإدارة حالة عبر Vuex لفرق البرامج.",
+  w4b:"تكامل تحديد الموقع وخرائط Google لتتبّع الموظفين الميدانيين مقابل المواقع المسندة إليهم.",
+  e1:"<strong>كنان للتكنولوجيا</strong> — مطوّر متكامل. ArabsStock وESG.",
+  e2:"<strong>Accessline</strong> — بعقد. منصّة تغذية وعافية بـ Laravel وVue.",
+  e3:"<strong>Apex for IT Solutions وRasd</strong> — Laravel وFCM وHyperPay وواجهات REST وتحليلات التواصل.",
+  e4:"<strong>Effects للاستشارات والتطوير</strong> — لوحات بيانات وخرائط وتسليم WordPress/PHP.",
+  e5:"<strong>Space</strong> — أول عمل إنتاجي: منصّة ثقافية بـ PHP وMySQL.",
+  e6:"<strong>بكالوريوس تكنولوجيا المعلومات والاتصالات</strong> — جامعة القدس المفتوحة، 2013–2016.",
+  s1:"الواجهة الخلفية", s1v:"معمارية معيارية", s2:"الواجهة الأمامية", s3:"البيانات والبحث",
+  s4:"المهام والوسائط", s5:"البنية التحتية", s6:"المدفوعات", s7:"اللغات",
+  s7v:"العربية (لغة أم) · الإنجليزية (مستوى عمل احترافي)",
+  cta1:"أنا متاح لوظائف backend أو full-stack عن بُعد، وللعمل بعقود. إن كنت تبحث عن مطوّر، أسرع طريقة للحكم عليّ هي سؤال محدّد — كيف بُني فهرس البحث، أو ماذا يحدث بين رفع الملف وتسليمه.",
+  cta2:"راسلني →",
+  foot:"إبراهيم سلامة ماضي · غزة، فلسطين"
+};
+
+const root = document.documentElement;
+const EN = new Map();
+document.querySelectorAll("[data-i18n],[data-i18n-html]").forEach(el => EN.set(el, el.innerHTML));
+
+function setLang(lang){
+  const ar = lang === "ar";
+  root.lang = ar ? "ar" : "en";
+  root.dir = ar ? "rtl" : "ltr";
+  document.querySelectorAll("[data-i18n],[data-i18n-html]").forEach(el => {
+    const key = el.dataset.i18n || el.dataset.i18nHtml;
+    el.innerHTML = ar ? (AR[key] ?? EN.get(el)) : EN.get(el);
+  });
+  document.getElementById("lang").textContent = ar ? "English" : "العربية";
+  syncThemeLabel();
+  if (typeof renderDemo === "function") renderDemo();
+  try{ localStorage.setItem("lang", lang); }catch(e){}
+}
+
+function currentDark(){
+  const set = root.getAttribute("data-theme");
+  if(set) return set === "dark";
+  return matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function syncThemeLabel(){
+  const dark = currentDark();
+  const ar = root.lang === "ar";
+  document.getElementById("theme").textContent = dark ? (ar ? "فاتح" : "Light") : (ar ? "داكن" : "Dark");
+}
+
+document.getElementById("lang").addEventListener("click", () => setLang(root.lang === "ar" ? "en" : "ar"));
+document.getElementById("theme").addEventListener("click", () => {
+  const next = currentDark() ? "light" : "dark";
+  root.setAttribute("data-theme", next);
+  try{ localStorage.setItem("theme", next); }catch(e){}
+  syncThemeLabel();
+});
+
+try{
+  const t = localStorage.getItem("theme");
+  if(t) root.setAttribute("data-theme", t);
+  if(localStorage.getItem("lang") === "ar") setLang("ar");
+}catch(e){}
+syncThemeLabel();
+
+/* ---------------------------------------------------------------- search demo
+   The same normalisation has to run over the query and the document, or the
+   index is useless. Each step below is one real rule from that chain. */
+const CORPUS = [
+  "قهوة عربية في فنجان تقليدي",
+  "مُصَوِّر يحمل كاميرا احترافية",
+  "أطفال يلعبون في حديقة عامة",
+  "مسجد قبة الصخرة عند الغروب",
+  "ناطحات سحاب في دبي ليلاً",
+  "مزارع فلسطيني يقطف حبّات الزيتون",
+  "سيدة محجبة تعمل في مكتب حديث",
+  "خط عربي مزخرف على ورق قديم",
+  "طالبة جامعية تقرأ كتاباً في المكتبة",
+  "سوق شعبي في المدينة القديمة",
+  "فنجان قهوة وكتاب على طاولة خشبية",
+  "رجل أعمال يستخدم حاسوباً محمولاً"
+];
+
+const STEPS = [
+  { en:"strip vowel marks and tatweel", ar:"حذف التشكيل والتطويل",
+    fn: t => t.replace(/[ً-ْٰـ]/g, "") },
+  { en:"unify the four alef variants", ar:"توحيد صور الألف الأربع",
+    fn: t => t.replace(/[آأإٱ]/g, "ا") },
+  { en:"alef maqsura → ya, ta marbuta → ha", ar:"الألف المقصورة ← ياء، التاء المربوطة ← هاء",
+    fn: t => t.replace(/ى/g, "ي").replace(/ة/g, "ه") },
+  { en:"fold the remaining hamza carriers", ar:"توحيد بقية حوامل الهمزة",
+    fn: t => t.replace(/ؤ/g, "و").replace(/ئ/g, "ي").replace(/ء/g, "") }
+];
+
+const norm = t => STEPS.reduce((a, s) => s.fn(a), String(t)).replace(/\s+/g, " ").trim();
+const INDEX = CORPUS.map(title => ({ title, key: norm(title) }));
+const CHIPS = ["قَهْوَة","قهوه","اطفال","مصور","حبات","مدينه"];
+
+const esc = t => t.replace(/[&<>]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;" }[c]));
+const hit = (text, q) => {
+  if (!q) return esc(text);
+  const i = text.indexOf(q);
+  if (i < 0) return esc(text);
+  return esc(text.slice(0, i)) + "<mark>" + esc(text.slice(i, i + q.length)) + "</mark>" + esc(text.slice(i + q.length));
+};
+
+function renderDemo(){
+  const ar = document.documentElement.lang === "ar";
+  const raw = document.getElementById("q").value.trim();
+
+  const pipe = document.getElementById("pipe");
+  let cur = raw;
+  pipe.innerHTML = STEPS.map(st => {
+    const before = cur; cur = st.fn(cur);
+    const shown = cur === before ? "<del>" + esc(cur || "—") + "</del>" : esc(cur || "—");
+    return '<li><span class="what">' + esc(ar ? st.ar : st.en) + '</span><span class="out" dir="rtl">' + shown + "</span></li>";
+  }).join("");
+  const key = cur.replace(/\s+/g, " ").trim();
+
+  const naive = raw ? INDEX.filter(r => r.title.includes(raw)) : [];
+  const smart = key ? INDEX.filter(r => r.key.includes(key)) : [];
+
+  const empty = ar ? "لا نتائج" : "no rows returned";
+  const put = (listId, countId, rows, q, withKey) => {
+    document.getElementById(countId).textContent = rows.length;
+    document.getElementById(listId).innerHTML = rows.length
+      ? rows.map(r => "<li>" + (withKey ? esc(r.title) + '<span class="idx" dir="rtl">' + hit(r.key, q) + "</span>" : hit(r.title, q)) + "</li>").join("")
+      : '<li class="empty">' + esc(empty) + "</li>";
+  };
+  put("r-naive", "c-naive", naive, raw, false);
+  put("r-norm", "c-norm", smart, key, true);
+}
+
+(function initDemo(){
+  const q = document.getElementById("q");
+  if (!q) return;
+  document.getElementById("chips").innerHTML =
+    CHIPS.map(c => '<button type="button" dir="rtl" data-q="' + c + '">' + c + "</button>").join("");
+  document.getElementById("chips").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    q.value = b.dataset.q; renderDemo(); q.focus();
+  });
+  q.addEventListener("input", renderDemo);
+  renderDemo();
+})();
+
+</script>
+</body>
+</html>
