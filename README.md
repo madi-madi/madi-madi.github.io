@@ -52,3 +52,15 @@ gh auth login -s repo,delete_repo,read:user
 
 Making a repo private is reversible from its settings page at any time.
 Fork deletion is not, so the script asks first.
+
+## Contact and visits
+
+The `contact` command in the terminal and the form on `about.html` both POST to
+FormSubmit, which forwards to my inbox and needs no account. **The first message
+you send arrives as a confirmation email — click the link in it once and the
+endpoint goes live.** Until then submissions are held, not delivered.
+
+Visit counting is GoatCounter: no cookies, no personal data, about 3 KB. Sign up
+free at goatcounter.com, then replace `MADI` in the snippet at the bottom of
+`index.html` and `about.html` with your own site code. Terminal commands are
+counted as events, so the dashboard shows which ones people actually run.

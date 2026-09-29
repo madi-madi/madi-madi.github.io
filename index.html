@@ -130,6 +130,11 @@ body{
   font-family:var(--mono); font-size:12px; background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.14); border-radius:3px; padding:1px 5px;
 }
+/* contact flow */
+.ask{color:var(--orange); font-weight:700}
+.sent{border-inline-start:2px solid var(--green); padding-inline-start:10px; color:var(--fg)}
+.field{color:var(--blue)}
+
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 </style>
 </head>
@@ -274,6 +279,70 @@ const CORPUS = [
 const norm = t => STEPS.reduce((a,[,f]) => f(a), String(t)).replace(/\s+/g," ").trim();
 const INDEX = CORPUS.map(t => ({ t, k: norm(t) }));
 
+/* ---------------------------------------------------------------- contact
+   A three-step prompt that posts to FormSubmit, which needs no account and
+   forwards straight to my inbox. Falls back to mailto if the POST fails. */
+const ENDPOINT = "https://formsubmit.co/ajax/ibrahim.s.m.2010@gmail.com";
+const STEPS_C = [
+  { key: "name",    q: "your name" },
+  { key: "email",   q: "your email", ok: v => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v), err: "that does not look like an email" },
+  { key: "message", q: "your message" }
+];
+let pending = null;
+
+function askNext(){
+  const st = STEPS_C[pending.step];
+  out('<span class="ask">? </span><span class="field">' + esc(st.q) + "</span>");
+}
+
+function handleAnswer(v){
+  if (v.trim().toLowerCase() === "cancel"){
+    pending = null;
+    out('<span class="dim">cancelled.</span>');
+    return;
+  }
+  const st = STEPS_C[pending.step];
+  if (!v.trim()){ out('<span class="err">' + esc(st.q) + " cannot be empty</span>"); return; }
+  if (st.ok && !st.ok(v.trim())){ out('<span class="err">' + esc(st.err) + "</span>"); return; }
+  pending.data[st.key] = v.trim();
+  pending.step++;
+  if (pending.step < STEPS_C.length){ askNext(); return; }
+
+  const d = pending.data;
+  pending = null;
+  out('<span class="dim">sending …</span>');
+  fetch(ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({
+      name: d.name, email: d.email, message: d.message,
+      _subject: "madi-madi.github.io — message from " + d.name,
+      _template: "table"
+    })
+  })
+  .then(r => r.ok ? r.json() : Promise.reject(r.status))
+  .then(() => {
+    out('<span class="sent"><span class="ok">Sent.</span> Thanks ' + esc(d.name) +
+        " — I answer within a day, to " + esc(d.email) + ".</span>");
+    track("contact/sent");
+  })
+  .catch(() => {
+    const url = "mailto:ibrahim.s.m.2010@gmail.com?subject=" +
+      encodeURIComponent("Message from " + d.name) + "&body=" + encodeURIComponent(d.message);
+    out('<span class="err">The form could not reach my inbox.</span>\n' +
+        '<span class="dim">Use <a href="' + url + '" style="color:var(--orange)">this mail link</a> ' +
+        "or write to ibrahim.s.m.2010@gmail.com directly.</span>");
+    track("contact/failed");
+  })
+  .finally(() => { drawPrompt(); term.scrollTop = term.scrollHeight; });
+}
+
+/* one counted event per command, so I can see what people actually try */
+function track(path){
+  try { if (window.goatcounter && window.goatcounter.count)
+    window.goatcounter.count({ path: path, title: path, event: true }); } catch(e){}
+}
+
 const term = document.getElementById("term");
 const esc = t => String(t).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const PROMPT = '<span class="u">ibrahim@madi</span><span class="w">:</span><span class="p">~</span><span class="w">$</span> ';
@@ -300,6 +369,7 @@ const COMMANDS = {
       ["ls","list the files here"],
       ["cat <file>","read one — about.txt, experience.txt, contact.txt"],
       ["search <arabic>","run my Arabic normaliser over 6 sample titles"],
+      ["contact","send me a message without leaving this page"],
       ["about","the same story as a readable page"],
       ["cv","open the PDF"],
       ["clear","clear the screen"]
@@ -359,6 +429,13 @@ const COMMANDS = {
       (smart.length ? '<span class="ok">' + smart.length + " rows</span>\n" +
         smart.map(r => "    " + esc(r.t)).join("\n") : '<span class="err">0 rows</span>'));
   },
+  contact(){
+    if (pending) return;
+    pending = { step: 0, data: {} };
+    out('<span class="dim">Three questions, then it lands in my inbox. Type <span class="ok">cancel</span> to stop.</span>');
+    askNext();
+  },
+  hire(){ COMMANDS.contact(); },
   about(){
     out('<span class="dim">opening the long-form version …</span>');
     location.href = "about.html";
@@ -384,11 +461,13 @@ COMMANDS["cat"].raw = true;
 function run(raw){
   const line = raw.trim();
   echoCmd(line);
+  if (pending){ handleAnswer(line); if (pending) drawPrompt(); term.scrollTop = term.scrollHeight; return; }
   if (line){
     const sp = line.indexOf(" ");
     const name = (sp < 0 ? line : line.slice(0, sp)).toLowerCase();
     const arg = sp < 0 ? "" : line.slice(sp + 1).trim();
     const fn = COMMANDS[name];
+    track("cmd/" + (fn ? name : "unknown"));
     if (fn) fn(arg);
     else out('<span class="err">' + esc(name) + ": command not found</span>\n" +
              '<span class="dim">type <span class="ok">help</span> to see what works here</span>');
@@ -445,7 +524,7 @@ term.addEventListener("mousedown", e => {
 });
 
 document.getElementById("chips").innerHTML =
-  ["neofetch","skills","projects","about","search قَهْوَة","cat contact.txt","help"]
+  ["neofetch","skills","projects","about","contact","search قَهْوَة","cat contact.txt","help"]
   .map(c => '<button type="button" data-c="' + c + '">' + esc(c) + "</button>").join("");
 document.getElementById("chips").addEventListener("click", e => {
   const b = e.target.closest("button");
@@ -462,5 +541,7 @@ run("neofetch");
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Ibrahim Salama Madi","alternateName":"إبراهيم سلامة ماضي","jobTitle":"Full-Stack Web Developer","email":"mailto:ibrahim.s.m.2010@gmail.com","url":"https://madi-madi.github.io/","address":{"@type":"PostalAddress","addressLocality":"Gaza","addressCountry":"PS"},"sameAs":["https://github.com/madi-madi","https://www.linkedin.com/in/madi-madi/"],"knowsLanguage":["ar","en"],"knowsAbout":["Laravel","PHP","Vue.js","Nuxt.js","Elasticsearch","Redis","RabbitMQ","Docker","Kubernetes","Python"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Al-Quds Open University"}}
 </script>
+<script data-goatcounter="https://MADI.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

@@ -180,6 +180,25 @@ footer{margin-top:8px; padding-top:18px; border-top:1px solid var(--rule); font-
 .col mark{background:var(--brand-wash); color:var(--ink); padding:0 2px; border-radius:2px}
 .col .empty{font-size:14px; color:var(--muted); direction:ltr; font-family:var(--mono)}
 
+/* contact form */
+.form{display:grid; gap:12px; max-width:34rem; margin-top:22px}
+.form label{display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:5px}
+.form input,.form textarea{
+  width:100%; font-family:var(--sans); font-size:15.5px; color:var(--ink);
+  background:var(--surface); border:1px solid var(--rule-strong); border-radius:3px; padding:10px 12px;
+}
+.form textarea{min-height:120px; resize:vertical}
+.form input:focus,.form textarea:focus{outline:none; border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-wash)}
+.form button{
+  justify-self:start; font-family:var(--sans); font-size:15.5px; font-weight:600;
+  background:var(--brand); color:var(--on-brand); border:0; border-radius:3px; padding:11px 22px; cursor:pointer;
+}
+.form button:hover{background:var(--brand-hover)}
+.form button[disabled]{opacity:.55; cursor:default}
+.hp{position:absolute; left:-9999px}
+.formnote{font-size:14px; color:var(--muted); margin:0}
+.formnote.good{color:var(--accent)}
+
 /* ---------- diagram ---------- */
 .diagram{margin:26px 0 0}
 .diagram svg{max-width:100%; height:auto; color:var(--ink); display:block}
@@ -422,7 +441,23 @@ footer{margin-top:8px; padding-top:18px; border-top:1px solid var(--rule); font-
     <section id="contact" class="contact">
       <p class="eyebrow" data-i18n="nav4">Contact</p>
       <p data-i18n="cta1">I am open to remote backend or full-stack roles, and to contract work. If you are hiring, the fastest way to judge me is to ask about something specific — how the search index is built, or what happens between an upload and a delivered file.</p>
-      <a class="cta" href="mailto:ibrahim.s.m.2010@gmail.com?subject=Role%20enquiry" data-i18n="cta2">Email me &rarr;</a>
+      <form class="form" id="cf" action="https://formsubmit.co/ajax/ibrahim.s.m.2010@gmail.com" method="POST">
+        <div>
+          <label for="cf-name" data-i18n="f1">Your name</label>
+          <input id="cf-name" name="name" type="text" required autocomplete="name">
+        </div>
+        <div>
+          <label for="cf-email" data-i18n="f2">Your email</label>
+          <input id="cf-email" name="email" type="email" required autocomplete="email">
+        </div>
+        <div>
+          <label for="cf-msg" data-i18n="f3">What would you like to ask?</label>
+          <textarea id="cf-msg" name="message" required></textarea>
+        </div>
+        <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit" id="cf-send" data-i18n="f4">Send</button>
+        <p class="formnote" id="cf-note" role="status" data-i18n="f5">Or write to ibrahim.s.m.2010@gmail.com directly.</p>
+      </form>
       <footer>
         <span data-i18n="foot">Ibrahim Salama Madi · Gaza, Palestine</span>
       </footer>
@@ -433,6 +468,44 @@ footer{margin-top:8px; padding-top:18px; border-top:1px solid var(--rule); font-
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Ibrahim Salama Madi","alternateName":"إبراهيم سلامة ماضي","jobTitle":"Full-Stack Web Developer","email":"mailto:ibrahim.s.m.2010@gmail.com","url":"https://madi-madi.github.io/","address":{"@type":"PostalAddress","addressLocality":"Gaza","addressCountry":"PS"},"sameAs":["https://github.com/madi-madi","https://www.linkedin.com/in/madi-madi/"],"knowsLanguage":["ar","en"],"knowsAbout":["Laravel","PHP","Vue.js","Nuxt.js","Elasticsearch","Redis","RabbitMQ","Docker","Kubernetes","Python"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Al-Quds Open University"}}
+/* ---------------------------------------------------------------- contact
+   Posts to FormSubmit, which forwards to my inbox without an account.
+   If it fails the visitor still gets a working mail link. */
+(function(){
+  const f = document.getElementById("cf");
+  if (!f) return;
+  const note = document.getElementById("cf-note"), btn = document.getElementById("cf-send");
+  const AR = document.documentElement.lang === "ar";
+  f.addEventListener("submit", ev => {
+    ev.preventDefault();
+    const ar = document.documentElement.lang === "ar";
+    btn.disabled = true;
+    note.className = "formnote";
+    note.textContent = ar ? "\u062c\u0627\u0631\u064d \u0627\u0644\u0625\u0631\u0633\u0627\u0644 \u2026" : "Sending \u2026";
+    fetch(f.action, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(Object.fromEntries(new FormData(f)))
+    })
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(() => {
+      f.reset();
+      note.className = "formnote good";
+      note.textContent = ar
+        ? "\u0648\u0635\u0644\u062a. \u0623\u0631\u062f\u0651 \u062e\u0644\u0627\u0644 \u064a\u0648\u0645."
+        : "Sent. I answer within a day.";
+      try { window.goatcounter && window.goatcounter.count({ path:"contact/sent", title:"contact/sent", event:true }); } catch(e){}
+    })
+    .catch(() => {
+      note.className = "formnote";
+      note.innerHTML = ar
+        ? "\u062a\u0639\u0630\u0651\u0631 \u0627\u0644\u0625\u0631\u0633\u0627\u0644. \u0631\u0627\u0633\u0644\u0646\u064a \u0639\u0644\u0649 <a href=\'mailto:ibrahim.s.m.2010@gmail.com\'>ibrahim.s.m.2010@gmail.com</a>"
+        : "That did not go through. Write to <a href=\'mailto:ibrahim.s.m.2010@gmail.com\'>ibrahim.s.m.2010@gmail.com</a> instead.";
+    })
+    .finally(() => { btn.disabled = false; });
+  });
+})();
+
 </script>
 
 <script>
@@ -607,5 +680,7 @@ function renderDemo(){
 })();
 
 </script>
+<script data-goatcounter="https://MADI.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
